@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"time"
@@ -48,6 +47,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		//将文件指针移动到文件的开头
 		newFile.Seek(0, 0)
 		fileMeta.FileSha1 = utils.FileSha1(newFile)
 		meta.UpdateFileMeta(fileMeta)
@@ -84,7 +84,7 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer f.Close()
-	data, err := ioutil.ReadAll(f)
+	data, err := io.ReadAll(f)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
